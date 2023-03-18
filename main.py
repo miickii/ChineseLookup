@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
+
 from config import Config
 import os
 
@@ -13,6 +14,7 @@ with app.app_context():
     searcher = Searcher()
 
 @app.route("/search", methods=['POST'])
+@cross_origin()
 def search():
     data = request.json['text']
     input_text = data.lower()
@@ -26,6 +28,7 @@ def search():
     return jsonify(output)
 
 @app.route("/analyze", methods=['POST'])
+@cross_origin()
 def analyze():
     text = request.json['text']
     result = searcher.analyze_sentence(text)
