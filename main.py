@@ -9,7 +9,8 @@ app.config.from_object(Config)
 db.init_app(app)
 
 from searcher import Searcher
-searcher = Searcher()
+with app.app_context():
+    searcher = Searcher()
 
 @app.route("/search", methods=['POST'])
 def search():
