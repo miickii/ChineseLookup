@@ -1,7 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from config import Config
-from searcher import Searcher
 import os
 
 db = SQLAlchemy()
@@ -9,6 +8,7 @@ app = Flask(__name__)
 app.config.from_object(Config)
 db.init_app(app)
 
+from searcher import Searcher
 searcher = Searcher()
 
 @app.route("/search", methods=['POST'])
