@@ -9,3 +9,4 @@ SQLAlchemy==1.4.42
 wordfreq==3.0.3
 jieba==0.42.1
 pinyin==0.4.0
+Flask-SQLAlchemy==3.0.2
