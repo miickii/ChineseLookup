@@ -3,6 +3,10 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_cors import cross_origin
 from config import Config
 import os
+import openai
+
+openai.api_key = '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'
+message_history = [{"role": "system", "content": "You are a chinese tutor and will respond to all my questions"}, {"role": "assistant", "content": "OK"}]
 
 db = SQLAlchemy()
 app = Flask(__name__)
@@ -34,6 +38,21 @@ def analyze():
     result = searcher.analyze_sentence(text)
 
     return jsonify(result)
+
+@app.route("/chat", methods=['POST'])
+@cross_origin()
+def analyze():
+    global message_history
+    text = request.json['text']
+    message_history.append({"role": "user", "content": text})
+    completion = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+        messages=message_history
+    )
+    reply_content = completion.choices[0].message.content
+    message_history.append({"role": "assistant", "content": reply_content})
+
+    return jsonify(reply_content)
 
 
 if __name__ == '__main__':
