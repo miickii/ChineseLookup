@@ -4,8 +4,10 @@ from flask_cors import cross_origin
 from config import Config
 import os
 import openai
+from dotenv import load_dotenv
+load_dotenv()
 
-openai.api_key = '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'
+openai.api_key = os.getenv("OPENAI_KEY")
 message_history = [{"role": "system", "content": "You are a chinese tutor and will respond to all my questions"}, {"role": "assistant", "content": "OK"}]
 
 db = SQLAlchemy()
