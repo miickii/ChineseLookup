@@ -56,6 +56,14 @@ def chat():
 
     return jsonify(reply_content)
 
+@app.route("/reset-chat", methods=['POST'])
+@cross_origin()
+def reset_chat():
+    global message_history
+    message_history = [{"role": "system", "content": "You are a chinese tutor and will respond to all my questions"}, {"role": "assistant", "content": "OK"}]
+
+    return jsonify("OK")
+
 
 if __name__ == '__main__':
     app.run(debug=True, port=os.getenv("PORT", default=5000))
