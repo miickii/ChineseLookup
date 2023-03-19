@@ -5,7 +5,7 @@ from config import Config
 import os
 import openai
 
-openai.api_key = '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'
+openai.api_key = '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'
 message_history = [{"role": "system", "content": "You are a chinese tutor and will respond to all my questions"}, {"role": "assistant", "content": "OK"}]
 
 db = SQLAlchemy()
