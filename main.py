@@ -41,7 +41,7 @@ def analyze():
 
 @app.route("/chat", methods=['POST'])
 @cross_origin()
-def analyze():
+def chat():
     global message_history
     text = request.json['text']
     message_history.append({"role": "user", "content": text})
