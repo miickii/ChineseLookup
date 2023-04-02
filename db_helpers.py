@@ -5,7 +5,7 @@
 # import os
 # from cedict_utils.cedict import CedictParser
 # from main import db, app
-# from models import Sentence, HSK, Cedict
+# from models import Sentence, HSK, Cedict, Custom, Category
 # from analyzer import Analyzer
 
 # analyzer = Analyzer()
@@ -234,6 +234,34 @@
 #             print(column.key)
 #         print("\n")
 
+# def build_custom():
+#     con_old = sqlite3.connect("files/curr_custom.db")
+#     cursor_old = con_old.cursor()
+#     con_new = sqlite3.connect("app.db")
+#     cursor_new = con_new.cursor()
+
+#     # Categories
+#     cursor_old.execute("SELECT * FROM Category")
+#     categories_old = cursor_old.fetchall()
+#     for c in categories_old:
+#         cursor_new.execute("INSERT INTO Category VALUES (?, ?)", (c[0], c[1]))
+
+#     # Words
+#     cursor_old.execute("SELECT * FROM Word")
+#     words_old = cursor_old.fetchall()
+#     for i in range(len(words_old)):
+#         cursor_new.execute("INSERT INTO Custom VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", (words_old[i][0], words_old[i][2], words_old[i][3], words_old[i][4], words_old[i][5], words_old[i][6], words_old[i][7], words_old[i][8], words_old[i][9]))
+    
+#     # Relationship
+#     cursor_old.execute("SELECT * FROM word_category")
+#     links_old = cursor_old.fetchall()
+#     for l in links_old:
+#         cursor_new.execute("INSERT INTO custom_category VALUES (?, ?)", (l[0], l[1]))
+
+#     con_new.commit()
+#     con_new.close()
+#     con_old.close()
+
 # # Init db, create all tables and add all data with above functions (PREVIOUS DATABASE SHOULD BE DELETED BEFORE)
 # def rebuild_database(test=False):
 #     if test and os.path.exists("app_test.db"):
@@ -248,6 +276,10 @@
 #     add_hsk()
 #     add_cedict()
 
+# def empty_custom_db():
+#     words = Custom.query.all()
+#     for w in words:
+#         db.session.delete(w)
 
 # # WORK WITH DATABASE (activates a Flask context)
 # def handle_database(commit=False):
@@ -257,8 +289,8 @@
 #         #add_sentences() READDS IF ALREADY ADDED
 #         #add_hsk(True) READDS IF ALREADY ADDED
 #         #add_cedict() READDS IF ALREADY ADDED
-#         rebuild_database() #DOES EVERYTHING ABOVE
-#         #empty_profile_db()
+#         #rebuild_database() #DOES EVERYTHING ABOVE
+#         #empty_custom_db()
 
 #         # DOESN'T NEED commit=True
 #         #print_sentences()
@@ -276,7 +308,8 @@
 
 
 
-# handle_database(commit=True)
+# #handle_database(commit=False)
+# #build_custom()
 
 # # Checking if hsk with level is the same size as hsk in database
 # # hsk = retrieve_hsk_with_level(False)
