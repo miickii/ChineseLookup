@@ -15,6 +15,8 @@ app = Flask(__name__)
 app.config.from_object(Config)
 db.init_app(app)
 
+from models import Custom, Category
+
 from searcher import Searcher
 with app.app_context():
     searcher = Searcher()
@@ -39,6 +41,83 @@ def analyze():
     text = request.json['text']
     result = searcher.analyze_sentence(text)
 
+    return jsonify(result)
+
+@app.route("/fetch-profile-data", methods=['GET'])
+@cross_origin()
+def fetch_profile_data():
+    results = [] # index 0: words, index 1: categories
+    words = Custom.query.all()
+
+    # Adding words
+    results.append([searcher.profile_word_json(w) for w in words])
+
+    # Adding categories
+    categories = Category.query.all()
+    results.append([{"name": c.name} for c in categories])
+    
+    return jsonify(results)
+
+def update_custom(word, chinese, chinese_traditional, pinyin, english, pos, frequency, level):
+    word.chinese = chinese
+    word.chinese_traditional = chinese_traditional
+    word.pinyin = pinyin
+    word.english = english
+    word.pos = pos
+    word.frequency = frequency
+    word.level = level
+
+# Adds word to profile database ("Word" table)
+@app.route("/add-custom", methods=['POST'])
+@cross_origin()
+def add_custom():
+    c, c_trad, p, p_num, e, e_short, pos, freq, level, categories = request.json['word']
+    add = request.json['add']
+
+    custom = Custom.query.filter_by(chinese=c).first()
+    if custom:
+        if add:
+            return jsonify("word in database")
+        update_custom(custom, c, c_trad, p, e, pos, freq, level)
+    else:
+        custom = Custom(chinese=c, chinese_traditional=c_trad, pinyin=p, english=e, pos=pos, frequency=freq, level=level, srs=0)
+        print("new word!")
+        db.session.add(custom)
+
+    # Create categories that aren't already in database
+    db_categories = []
+    for name in categories:
+        category = Category.query.filter_by(name=name.lower()).first()
+        if not category:
+            category = Category(name=name.lower())
+            print("new category!")
+            db.session.add(category)
+        
+        db_categories.append(category)
+
+    custom.categories = db_categories
+
+    db.session.commit()
+
+    return jsonify("done")
+
+@app.route("/delete-custom", methods=['DELETE'])
+@cross_origin()
+def delete_custom():
+    id = request.json['id']
+    try:
+        custom = Custom.query.filter_by(id=id).delete()
+        db.session.commit()
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+    return jsonify("deleted")
+
+@app.route("/get-categories", methods=['GET'])
+@cross_origin()
+def get_categories():
+    categories = Category.query.all()
+    result = [{"name": c.name} for c in categories]
     return jsonify(result)
 
 @app.route("/chat", methods=['POST'])

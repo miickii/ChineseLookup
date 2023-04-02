@@ -76,6 +76,9 @@ class Searcher:
 
         return {"id": word.id, "chinese": word.chinese, "chinese_traditional": traditional, "pinyin": word.pinyin, "pinyin_numbers": pinyin_numbers, "english" : word.english, "short_english": re.split(r"; |,", word.english)[0], "examples" : [], "pos": word.pos, "frequency": word.frequency, "level": level, "source": source}
     
+    def profile_word_json(self, word):
+        return {"id": word.id, "chinese": word.chinese, "chinese_traditional": word.chinese_traditional, "pinyin": word.pinyin, "english" : word.english, "short_english": re.split(r"; |,", word.english)[0], "examples" : [], "pos": word.pos, "frequency": word.frequency, "level": word.level, "categories": [cat.name for cat in word.categories]}
+    
     # Breaks down sentence into tokens and returns words from database
     def analyze_sentence(self, chinese):
         tokens = self.analyzer.tokenize(chinese)
