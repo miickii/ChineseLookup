@@ -35,7 +35,9 @@ def search():
     output = []
 
     output = searcher.search_word(input_text)
-    print(f'Searched for "{input_text}", returned: {output}')
+    print(f'Searched for "{input_text}", returned:')
+    for o in output:
+        print(f'{o["id"]}, {o["chinese"]}, {o["pinyin"]}, {o["english"]}')
 
     return jsonify(output)
 
@@ -189,13 +191,17 @@ def get_test_words():
     # Randomize order of words
     random.shuffle(words)
 
+    # Print words to console
+    print("Test words returned:")
+    for w in words:
+        print(f'{w.id}, {w.chinese}, {w.pinyin}, {w.english}, srs: {w.srs}')
+
     # Each chinese word is split into all seperate characters, so that player can choose characters in the English test
     results = [searcher.word_json(w, split_characters=True) for w in words]
 
-    print("Test words returned:")
     # Add an example sentence too each word
     for r in results:
-        print(f'{r["id"]}, {r["chinese"][0]}, {r["pinyin"]}, {r["english"]}')
+        print(f'{r["id"]}, {r["chinese"][0]}, {r["pinyin"]}, {r["english"]}, srs: {r["srs"]}')
         # Search through all sentences and add to examples if they contain the chinese
         sentence = Sentence.query.filter(Sentence.chinese.contains(r["chinese"][0]), func.length(Sentence.chinese) < 30).first() # r["chinese"] is a list where the first element is the chinese word
         if sentence:
@@ -249,6 +255,15 @@ def update_srs():
     
     db.session.commit()
     return jsonify("done")
+
+@app.route("/print-srs", methods=['POST'])
+@cross_origin()
+def print_srs():
+    ids = request.json['words']
+    words = Custom.query.filter(Custom.id.in_(ids)).all()
+    for word in words:
+        print(word.chinese, word.english, word.srs)
+    return '', 204
 
 @app.route("/print-worst-srs")
 @cross_origin()
