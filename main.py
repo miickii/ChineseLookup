@@ -195,7 +195,7 @@ def get_test_words():
     print("Test words returned:")
     # Add an example sentence too each word
     for r in results:
-        print(f'{r.id}, {r.chinese[0]}, {r.pinyin}, {r.english}')
+        print(f'{r["id"]}, {r["chinese"][0]}, {r["pinyin"]}, {r["english"]}')
         # Search through all sentences and add to examples if they contain the chinese
         sentence = Sentence.query.filter(Sentence.chinese.contains(r["chinese"][0]), func.length(Sentence.chinese) < 30).first() # r["chinese"] is a list where the first element is the chinese word
         if sentence:
@@ -249,15 +249,6 @@ def update_srs():
     
     db.session.commit()
     return jsonify("done")
-
-@app.route("/print-custom-categories")
-@cross_origin()
-def print_custom_categories():
-    # Retrieve all entries from the Custom table which do not have any Category with the name 'sentence' (~ negates the condition). 
-    words = Custom.query.filter(~Custom.categories.any(Category.name == 'sentence')).all()
-    for word in words:
-        print(word.categories)
-    return '', 204
 
 @app.route("/print-worst-srs")
 @cross_origin()
