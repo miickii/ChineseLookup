@@ -62,17 +62,17 @@ class Searcher:
         try:
             traditional = word.chinese_traditional
         except:
-            print("No traditional")
+            pass
 
         try:
             level = word.level
         except:
-            print("No level")
+            pass
         
         try:
             pinyin_numbers = word.pinyin_numbers
         except:
-            print("No Pinyin numbers")
+            pass
 
         return {"id": word.id, "chinese": self.analyzer.split_characters(word.chinese) if split_characters else word.chinese, "chinese_traditional": traditional, "pinyin": word.pinyin, "pinyin_numbers": pinyin_numbers, "english" : word.english, "short_english": re.split(r"; |,", word.english)[0], "examples" : [], "pos": word.pos, "frequency": word.frequency, "level": level, "source": source}
     

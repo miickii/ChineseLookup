@@ -35,6 +35,7 @@ def search():
     output = []
 
     output = searcher.search_word(input_text)
+    print(f'Searched for "{input_text}", returned: {output}')
 
     return jsonify(output)
 
@@ -85,10 +86,12 @@ def fetch_profile_data():
     # Adding categories
     categories = Category.query.all()
     results.append([{"name": c.name} for c in categories])
+    print("Profile custom entries returned")
     
     return jsonify(results)
 
 def update_custom(word, chinese, chinese_traditional, pinyin, english, pos, frequency, level):
+    print(f'Updated {word.chinese} to: {chinese}, {chinese_traditional}, {pinyin}, {english}, {pos}, {frequency}, {level}')
     word.chinese = chinese
     word.chinese_traditional = chinese_traditional
     word.pinyin = pinyin
@@ -110,7 +113,7 @@ def add_custom():
         update_custom(custom, c, c_trad, p, e, pos, freq, level)
     else:
         custom = Custom(chinese=c, chinese_traditional=c_trad, pinyin=p, english=e, pos=pos, frequency=freq, level=level, srs=0)
-        print("new word!")
+        print("new word added!")
         db.session.add(custom)
 
     # Create categories that aren't already in database
@@ -119,7 +122,7 @@ def add_custom():
         category = Category.query.filter_by(name=name.lower()).first()
         if not category:
             category = Category(name=name.lower())
-            print("new category!")
+            print("new category added: " + name)
             db.session.add(category)
         
         db_categories.append(category)
@@ -137,6 +140,7 @@ def delete_custom():
     try:
         custom = Custom.query.filter_by(id=id).delete()
         db.session.commit()
+        print("Deleted custom entry with id: " + id)
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
@@ -188,8 +192,10 @@ def get_test_words():
     # Each chinese word is split into all seperate characters, so that player can choose characters in the English test
     results = [searcher.word_json(w, split_characters=True) for w in words]
 
+    print("Test words returned:")
     # Add an example sentence too each word
     for r in results:
+        print(f'{r.id}, {r.chinese[0]}, {r.pinyin}, {r.english}')
         # Search through all sentences and add to examples if they contain the chinese
         sentence = Sentence.query.filter(Sentence.chinese.contains(r["chinese"][0]), func.length(Sentence.chinese) < 30).first() # r["chinese"] is a list where the first element is the chinese word
         if sentence:
@@ -244,6 +250,23 @@ def update_srs():
     db.session.commit()
     return jsonify("done")
 
+@app.route("/print-custom-categories")
+@cross_origin()
+def print_custom_categories():
+    # Retrieve all entries from the Custom table which do not have any Category with the name 'sentence' (~ negates the condition). 
+    words = Custom.query.filter(~Custom.categories.any(Category.name == 'sentence')).all()
+    for word in words:
+        print(word.categories)
+    return '', 204
+
+@app.route("/print-worst-srs")
+@cross_origin()
+def print_worst_srs():
+    words = Custom.query.filter(~Custom.categories.any(Category.name == 'sentence')).all()
+    words.sort(key=lambda w: w.srs)
+    for word in words:
+        print(word.chinese, word.english, word.srs)
+    return '', 204
 
 if __name__ == '__main__':
     app.run(debug=True, port=os.getenv("PORT", default=5000))
