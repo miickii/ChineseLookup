@@ -201,7 +201,6 @@ def get_test_words():
 
     # Add an example sentence too each word
     for r in results:
-        print(f'{r["id"]}, {r["chinese"][0]}, {r["pinyin"]}, {r["english"]}, srs: {r["srs"]}')
         # Search through all sentences and add to examples if they contain the chinese
         sentence = Sentence.query.filter(Sentence.chinese.contains(r["chinese"][0]), func.length(Sentence.chinese) < 30).first() # r["chinese"] is a list where the first element is the chinese word
         if sentence:
