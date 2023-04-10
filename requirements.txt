@@ -27,3 +27,4 @@ urllib3==1.26.15
 yarl==1.8.2
 python-dotenv==0.21.0
 pymysql==1.0.3
+cryptography

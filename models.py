@@ -9,28 +9,28 @@ class HSK(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     chinese = db.Column(db.String(20))
     pinyin = db.Column(db.String(60))
-    english = db.Column(db.String(60))
+    english = db.Column(db.String(150))
     pos = db.Column(db.String(10))
     frequency = db.Column(db.Integer)
     level = db.Column(db.Integer)
 
 class Cedict(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    chinese = db.Column(db.String(20))
-    chinese_traditional = db.Column(db.String(20))
-    pinyin = db.Column(db.String(60))
-    pinyin_numbers = db.Column(db.String(60))
-    pinyin_none = db.Column(db.String(60)) # Without marks or numbers
-    english = db.Column(db.String(200))
+    chinese = db.Column(db.String(25))
+    chinese_traditional = db.Column(db.String(25))
+    pinyin = db.Column(db.String(80))
+    pinyin_numbers = db.Column(db.String(105))
+    pinyin_none = db.Column(db.String(90)) # Without marks or numbers
+    english = db.Column(db.String(700))
     pos = db.Column(db.String(10))
     frequency = db.Column(db.Integer)
 
 class Sentence(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    chinese = db.Column(db.String(150))
-    pinyin = db.Column(db.String(400))
-    english = db.Column(db.String(500))
-    english_clean = db.Column(db.String(500))
+    chinese = db.Column(db.String(350))
+    pinyin = db.Column(db.String(800))
+    english = db.Column(db.String(700))
+    english_clean = db.Column(db.String(700))
 
 custom_category = db.Table('custom_category',
     db.Column('custom_id', db.Integer, db.ForeignKey('custom.id')),
@@ -40,10 +40,10 @@ custom_category = db.Table('custom_category',
 # Word table is just the custom database
 class Custom(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    chinese = db.Column(db.String(20))
-    chinese_traditional = db.Column(db.String(20))
-    pinyin = db.Column(db.String(60))
-    english = db.Column(db.String(60))
+    chinese = db.Column(db.String(400))
+    chinese_traditional = db.Column(db.String(400))
+    pinyin = db.Column(db.String(800))
+    english = db.Column(db.String(800))
     pos = db.Column(db.String(10))
     frequency = db.Column(db.Integer)
     level = db.Column(db.Integer)
@@ -59,5 +59,5 @@ class Custom(db.Model):
 
 class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(60))
+    name = db.Column(db.String(100))
 

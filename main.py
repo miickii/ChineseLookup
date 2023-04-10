@@ -19,9 +19,9 @@ db.init_app(app)
 
 from models import Custom, Category, Sentence
 
-from searcher import Searcher
-with app.app_context():
-    searcher = Searcher()
+# from searcher import Searcher
+# with app.app_context():
+#     searcher = Searcher()
 
 # DICTIONARY
 @app.route("/search", methods=['POST'])
