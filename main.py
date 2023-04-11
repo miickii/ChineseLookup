@@ -295,7 +295,7 @@ def add_frequent_words_from_text():
                 first_word = searched_words[0]
                 result.append(first_word["chinese"])
                 #custom = Custom(chinese=first_word["chinese"], chinese_traditional=first_word["chinese_traditional"], pinyin=first_word["pinyin"], english=first_word["english"], pos=first_word["pos"], frequency=first_word["frequency"], level=first_word["level"], srs=0)
-                print("new word added!")
+                #print("new word added!")
                 #db.session.add(custom)
                 #custom.categories = [new_category]
 
