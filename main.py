@@ -290,10 +290,11 @@ def add_frequent_words_from_text():
     for w in words:
         custom = Custom.query.filter_by(chinese=w).first()
         if not custom:
-            searched_words = searcher.search_word(w)
-            if len(searched_words) > 0:
-                first_word = searched_words[0]
-                result.append(first_word["chinese"])
+            result.append(w)
+            # searched_words = searcher.search_word(w)
+            # if len(searched_words) > 0:
+            #     first_word = searched_words[0]
+            #     result.append(first_word["chinese"])
                 #custom = Custom(chinese=first_word["chinese"], chinese_traditional=first_word["chinese_traditional"], pinyin=first_word["pinyin"], english=first_word["english"], pos=first_word["pos"], frequency=first_word["frequency"], level=first_word["level"], srs=0)
                 #print("new word added!")
                 #db.session.add(custom)
