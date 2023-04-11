@@ -99,7 +99,7 @@ class Analyzer:
             else:
                 count[word] += 1
         
-        freq_list = sorted(count, key=count.get, reverse=False)
+        freq_list = sorted(count, key=count.get, reverse=True)
         percentage_list = []
         for word in freq_list:
             percentage = count[word] / word_amount * 100
