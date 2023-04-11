@@ -104,6 +104,7 @@ class Analyzer:
         for word in freq_list:
             percentage = count[word] / word_amount * 100
             percentage_list.append(percentage)
+            print(word, percentage)
 
         if exclude_common_words:
             freq_list = [word for word in freq_list if (word not in self.common_words)]
