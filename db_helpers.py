@@ -240,23 +240,23 @@ def build_custom():
     con_old = sqlite3.connect("files/curr_custom.db")
     cursor_old = con_old.cursor()
 
-    # # Categories
-    # cursor_old.execute("SELECT * FROM Category")
-    # categories_old = cursor_old.fetchall()
-    # for c in categories_old:
-    #     category = Category(id=c[0], name=c[1])
-    #     db.session.add(category)
-    #     #cursor_new.execute("INSERT INTO Category VALUES (?, ?)", (c[0], c[1]))
+    # Categories
+    cursor_old.execute("SELECT * FROM Category")
+    categories_old = cursor_old.fetchall()
+    for c in categories_old:
+        category = Category(id=c[0], name=c[1])
+        db.session.add(category)
+        #cursor_new.execute("INSERT INTO Category VALUES (?, ?)", (c[0], c[1]))
 
-    # # Words
-    # cursor_old.execute("SELECT * FROM Word")
-    # words_old = cursor_old.fetchall()
-    # for i in range(len(words_old)):
-    #     custom = Custom(id=words_old[i][0], chinese=words_old[i][2], chinese_traditional=words_old[i][3], pinyin=words_old[i][4], english=words_old[i][5], pos=words_old[i][6], frequency=words_old[i][7], level=words_old[i][8], srs=words_old[i][9])
-    #     db.session.add(custom)
-    #     #cursor_new.execute("INSERT INTO Custom VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", (words_old[i][0], words_old[i][2], words_old[i][3], words_old[i][4], words_old[i][5], words_old[i][6], words_old[i][7], words_old[i][8], words_old[i][9]))
+    # Words
+    cursor_old.execute("SELECT * FROM Word")
+    words_old = cursor_old.fetchall()
+    for i in range(len(words_old)):
+        custom = Custom(id=words_old[i][0], chinese=words_old[i][2], chinese_traditional=words_old[i][3], pinyin=words_old[i][4], english=words_old[i][5], pos=words_old[i][6], frequency=words_old[i][7], level=words_old[i][8], srs=words_old[i][9])
+        db.session.add(custom)
+        #cursor_new.execute("INSERT INTO Custom VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", (words_old[i][0], words_old[i][2], words_old[i][3], words_old[i][4], words_old[i][5], words_old[i][6], words_old[i][7], words_old[i][8], words_old[i][9]))
     
-    # db.session.commit()
+    db.session.commit()
 
     # Relationship
     cursor_old.execute("SELECT * FROM word_category")
@@ -289,6 +289,8 @@ def rebuild_database(test=False):
     add_hsk()
     add_cedict()
 
+    db.session.commit()
+
 def empty_custom_db():
     words = Custom.query.all()
     for w in words:
@@ -314,37 +316,22 @@ def handle_database(commit=False):
         #print_cedict()
         #print_db_tables()
 
-        # print(len(chinese))
-        # print(len(freqs))
-        # print(len(ps)) 2.57 minutes
-        # cedict = retrieve_cedict()
-        # print(len(cedict))
-        # start = 2300
-        # for i in range(start, 118838):
-        #     c, t, p, p_num, p_none, e, pos, f = cedict[i]
-        #     word = Cedict(chinese=c, chinese_traditional=t, pinyin=p, pinyin_numbers=p_num, pinyin_none=p_none, english=e, pos=pos, frequency=f)
-        #     db.session.add(word)
-        
-        # db.session.commit()
-        # print(start)
-
         if commit:
             db.session.commit()
 
 
-# CONVERTED SQLITE3 TO MYSQL WITH: sqlite3mysql -f app.db -d MySQL -u root --mysql-password NxWYoZaY78cydE9yW6Gt -h containers-us-west-70.railway.app -P 6688
-# HOW I CONVERTED SQLITE3 TO MYSQL
-# first i dumped the sqlite file with: sqlite3 app.db .dump > dump.sql
-# then i connected to railway mysql with: railway connect MySQL
 handle_database(commit=True)
-#build_custom()
 
-# Checking if hsk with level is the same size as hsk in database
-# hsk = retrieve_hsk_with_level(False)
-# hskother = retrieve_hsk(False)
-# print(len(hsk))
-# print(len(hskother))
+# HOW I CONVERTED SQLITE3 TO MYSQL:
+# 1. Created local mysql database with commandline:
+# mysql -u root -p
+# mysql> CREATE DATABASE mysqldb
 
-# Commit db session
-#handle_database(commit=True)
+# 2. Assigned SQLALCHEMY_DATABASE_URI in config.py to: 'mysql+pymysql://root:password123@localhost/mysqldb'
+# 3. Ran rebuild_database() function
+# 4. Ran build_custom() function
+# 4. Made a dump file, connected to railway database and imported the dump file on commandline:
+# mysqldump -uroot -p mysqldb > dump.sql
+# railway connect MySQL
+# mysql> SOURCE dump.sql
 
