@@ -140,13 +140,13 @@ def add_custom():
 def delete_custom():
     custom_id = request.json['id']
     try:
-        custom = Custom.query.filter_by(id=custom_id)
+        custom = Custom.query.filter_by(id=custom_id).first()
         if custom:
             print(custom)
             custom.delete()
 
         db.session.commit()
-        print("Deleted custom entry with id: " + id)
+        print("Deleted custom entry with id: " + custom_id)
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
