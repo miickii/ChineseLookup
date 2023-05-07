@@ -141,7 +141,7 @@ def delete_custom():
     id = request.json['id']
     print(id)
     try:
-        custom = Custom.query.filter_by(id=id)
+        custom = Custom.query.filter_by(id=int(id))
         if custom:
             print(custom)
             custom.delete()
