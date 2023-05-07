@@ -139,8 +139,13 @@ def add_custom():
 @cross_origin()
 def delete_custom():
     id = request.json['id']
+    print(id)
     try:
-        custom = Custom.query.filter_by(id=id).delete()
+        custom = Custom.query.filter_by(id=id)
+        if custom:
+            print(custom)
+            custom.delete()
+
         db.session.commit()
         print("Deleted custom entry with id: " + id)
     except Exception as e:
