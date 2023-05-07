@@ -201,8 +201,16 @@ def get_test_words():
 
     # Add an example sentence too each word
     for r in results:
+        # Search through all custom sentences first
+        sentence = None
+        all_sentences = Category.query.filter_by(name="sentence").first().containing
+        for s in all_sentences:
+            if r["chinese"][0] in s.chinese:
+                sentence = s
+
         # Search through all sentences and add to examples if they contain the chinese
-        sentence = Sentence.query.filter(Sentence.chinese.contains(r["chinese"][0]), func.length(Sentence.chinese) < 30).first() # r["chinese"] is a list where the first element is the chinese word
+        if not sentence:
+            sentence = Sentence.query.filter(Sentence.chinese.contains(r["chinese"][0]), func.length(Sentence.chinese) < 30).first() # r["chinese"] is a list where the first element is the chinese word
         if sentence:
             r["examples"].append({"chinese": sentence.chinese, "pinyin": sentence.pinyin, "english": sentence.english})
 

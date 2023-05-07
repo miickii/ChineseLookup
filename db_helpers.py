@@ -335,3 +335,6 @@ handle_database(commit=True)
 # railway connect MySQL
 # mysql> SOURCE dump.sql
 
+# GET DATA FROM RAILWAY MySQL DATABASE
+# mysqldump -hcontainers-us-west-70.railway.app -uroot -pNxWYoZaY78cydE9yW6Gt --port 6688 --protocol=TCP railway > dump.sql
+
