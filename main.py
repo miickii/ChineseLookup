@@ -147,6 +147,7 @@ def delete_custom():
         db.session.commit()
         print("Deleted custom entry with id: " + custom_id)
     except Exception as e:
+        print(e)
         return jsonify({"error": str(e)}), 500
 
     return jsonify("deleted")
