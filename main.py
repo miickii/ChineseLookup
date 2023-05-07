@@ -176,7 +176,7 @@ def get_test_words():
     for category in db_categories:
         for custom in category.containing:
             # Make sure that the word hasn't been added already (some categories have the same word), and that the word has one of the selected levels
-            if custom not in words and custom.level in levels:
+            if custom not in words and (custom.level in levels or custom.level is None):
                 words.append(custom)
 
     # after getting all words filtered by category and level:
