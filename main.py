@@ -138,10 +138,9 @@ def add_custom():
 @app.route("/delete-custom", methods=['DELETE'])
 @cross_origin()
 def delete_custom():
-    id = request.json['id']
-    print(id)
+    custom_id = request.json['id']
     try:
-        custom = Custom.query.filter_by(id=int(id))
+        custom = Custom.query.filter_by(id=custom_id)
         if custom:
             print(custom)
             custom.delete()
