@@ -142,8 +142,7 @@ def delete_custom():
     try:
         custom = Custom.query.filter_by(id=custom_id).first()
         if custom:
-            print(custom)
-            custom.delete()
+            db.session.delete(custom)
 
         db.session.commit()
         print("Deleted custom entry with id: " + custom_id)
