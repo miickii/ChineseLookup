@@ -209,7 +209,7 @@ def get_test_words():
     for r in results:
         # Only add example sentence if there isn't already one
         if r["sentence_chinese"] == "":
-            # Search through all custom sentences first
+            # Search through all custom sentences
             sentence = None
             all_sentences = Category.query.filter_by(name="sentence").first().containing
             for s in all_sentences:
