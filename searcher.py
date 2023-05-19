@@ -80,7 +80,11 @@ class Searcher:
         return {"id": word.id, "chinese": self.analyzer.split_characters(word.chinese) if split_characters else word.chinese, "chinese_traditional": traditional, "pinyin": word.pinyin, "pinyin_numbers": pinyin_numbers, "english" : word.english, "short_english": re.split(r"; |,", word.english)[0], "examples" : [], "pos": word.pos, "frequency": word.frequency, "level": level, "source": source, "sentence_chinese": sentence_c, "sentence_pinyin": sentence_p, "sentence_english": sentence_e}
     
     def profile_word_json(self, word):
-        sentence_c, sentence_p, sentence_e = word.sentence.split(";")
+        sentence_c, sentence_p, sentence_e = "", "", ""
+        try:
+            sentence_c, sentence_p, sentence_e = word.sentence.split(";")
+        except:
+            pass
         return {"id": word.id, "chinese": word.chinese, "chinese_traditional": word.chinese_traditional, "pinyin": word.pinyin, "english" : word.english, "short_english": re.split(r"; |,", word.english)[0], "examples" : [], "pos": word.pos, "frequency": word.frequency, "level": word.level, "categories": [cat.name for cat in word.categories], "sentence_chinese": sentence_c, "sentence_pinyin": sentence_p, "sentence_english": sentence_e}
     
     # Breaks down sentence into tokens and returns words from database

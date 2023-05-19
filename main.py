@@ -207,19 +207,23 @@ def get_test_words():
 
     # Add an example sentence too each word
     for r in results:
-        # Search through all custom sentences first
-        sentence = None
-        all_sentences = Category.query.filter_by(name="sentence").first().containing
-        for s in all_sentences:
-            if r["chinese"][0] in s.chinese:
-                sentence = s
+        # Only add example sentence if there isn't already one
+        if r["sentence_chinese"] == "":
+            # Search through all custom sentences first
+            sentence = None
+            all_sentences = Category.query.filter_by(name="sentence").first().containing
+            for s in all_sentences:
+                if r["chinese"][0] in s.chinese:
+                    sentence = s
 
-        # Search through all sentences and add to examples if they contain the chinese
-        if not sentence:
-            sentence = Sentence.query.filter(Sentence.chinese.contains(r["chinese"][0]), func.length(Sentence.chinese) < 30).first() # r["chinese"] is a list where the first element is the chinese word
-        if sentence:
-            r["examples"].append({"chinese": sentence.chinese, "pinyin": sentence.pinyin, "english": sentence.english})
-
+            # Search through all sentences and add to examples if they contain the chinese
+            if not sentence:
+                sentence = Sentence.query.filter(Sentence.chinese.contains(r["chinese"][0]), func.length(Sentence.chinese) < 30).first() # r["chinese"] is a list where the first element is the chinese word
+            if sentence:
+                r["sentence_chinese"] = sentence.chinese
+                r["sentence_pinyin"] = sentence.pinyin
+                r["sentence_english"] = sentence.english
+                #r["examples"].append({"chinese": sentence.chinese, "pinyin": sentence.pinyin, "english": sentence.english})
     return jsonify(results)
 
 @app.route("/get-test-sentences", methods=["POST"])
