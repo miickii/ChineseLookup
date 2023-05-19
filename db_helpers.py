@@ -320,7 +320,7 @@ def handle_database(commit=False):
             db.session.commit()
 
 
-handle_database(commit=True)
+handle_database(commit=False)
 
 # HOW I CONVERTED SQLITE3 TO MYSQL:
 # 1. Created local mysql database with commandline:
@@ -337,4 +337,8 @@ handle_database(commit=True)
 
 # GET DATA FROM RAILWAY MySQL DATABASE
 # mysqldump -hcontainers-us-west-70.railway.app -uroot -pNxWYoZaY78cydE9yW6Gt --port 6688 --protocol=TCP railway > dump.sql
+
+# ADDED sentence COLUMN TO CUSTOM
+# logged in to railway again with: railway login --browserless. Then: railway connect MySQL
+# mysql> ALTER TABLE custom ADD COLUMN sentence VARCHAR(2000);
 

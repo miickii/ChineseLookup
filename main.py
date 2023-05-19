@@ -92,7 +92,7 @@ def fetch_profile_data():
     
     return jsonify(results)
 
-def update_custom(word, chinese, chinese_traditional, pinyin, english, pos, frequency, level):
+def update_custom(word, chinese, chinese_traditional, pinyin, english, pos, frequency, level, sentence):
     print(f'Updated {word.chinese} to: {chinese}, {chinese_traditional}, {pinyin}, {english}, {pos}, {frequency}, {level}')
     word.chinese = chinese
     word.chinese_traditional = chinese_traditional
@@ -101,20 +101,22 @@ def update_custom(word, chinese, chinese_traditional, pinyin, english, pos, freq
     word.pos = pos
     word.frequency = frequency
     word.level = level
+    word.sentence = sentence
 
 @app.route("/add-custom", methods=['POST'])
 @cross_origin()
 def add_custom():
     c, c_trad, p, p_num, e, e_short, pos, freq, level, categories = request.json['word']
+    sentence = request.json['sentence']
     add = request.json['add']
 
     custom = Custom.query.filter_by(chinese=c).first()
     if custom:
         if add:
             return jsonify("word in database")
-        update_custom(custom, c, c_trad, p, e, pos, freq, level)
+        update_custom(custom, c, c_trad, p, e, pos, freq, level, sentence)
     else:
-        custom = Custom(chinese=c, chinese_traditional=c_trad, pinyin=p, english=e, pos=pos, frequency=freq, level=level, srs=0)
+        custom = Custom(chinese=c, chinese_traditional=c_trad, pinyin=p, english=e, pos=pos, frequency=freq, level=level, srs=0, sentence=sentence)
         print("new word added!")
         db.session.add(custom)
 

@@ -56,6 +56,7 @@ class Custom(db.Model):
     # When srs reaches 3 it graduades to a learnt card and srs is set to None (this will make it appear in profile page)
     # This word will only show up in profile page if srs is equal to 0
     srs = db.Column(db.Integer) # None means that it isn't
+    sentence = db.Column(db.String(2000)) # New column
 
 class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)
