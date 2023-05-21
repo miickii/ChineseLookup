@@ -119,6 +119,12 @@ def add_custom():
         custom = Custom(chinese=c, chinese_traditional=c_trad, pinyin=p, english=e, pos=pos, frequency=freq, level=level, srs=0, sentence=sentence)
         print("new word added!")
         db.session.add(custom)
+        # If an example sentence was provided, also add that to the sentence table
+        sentence_c, sentence_p, sentence_e = sentence.split(";")
+        if sentence_c != "":
+            new_sentence = Custom(chinese=sentence_c, pinyin=sentence_p, english=sentence_e, level=level, srs=0)
+            db.session.add(new_sentence)
+            new_sentence.categories = [Category.query.filter_by(name="sentence").first()]
 
     # Create categories that aren't already in database
     db_categories = []

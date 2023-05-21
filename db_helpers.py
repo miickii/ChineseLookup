@@ -7,6 +7,7 @@ from cedict_utils.cedict import CedictParser
 from main import db, app
 from models import Sentence, HSK, Cedict, Custom, Category, custom_category
 from analyzer import Analyzer
+from sqlalchemy.sql.expression import func
 
 analyzer = Analyzer()
 
@@ -315,12 +316,37 @@ def handle_database(commit=False):
         #print_hsk_clean()
         #print_cedict()
         #print_db_tables()
+        words = []
+        db_categories = Category.query.all()
+        # Go through each category and add all words from that category
+        for category in db_categories:
+            if category.name == "sentence":
+                continue
+            for custom in category.containing:
+                # Make sure that the word hasn't been added already (some categories have the same word), and that the word has one of the selected levels
+                if custom not in words:
+                    words.append(custom)
+
+        # Add an example sentence too each word
+        for word in words:
+            # Search through all custom sentences
+            sentence = None
+            all_sentences = Category.query.filter_by(name="sentence").first().containing
+            for s in all_sentences:
+                if word.chinese in s.chinese:
+                    sentence = s
+
+            # Search through all sentences and add to examples if they contain the chinese
+            if not sentence:
+                sentence = Sentence.query.filter(Sentence.chinese.contains(word.chinese), func.length(Sentence.chinese) < 30).first() # r["chinese"] is a list where the first element is the chinese word
+            if sentence:
+                word.sentence = sentence.chinese + ";" + sentence.pinyin + ";" + sentence.english
 
         if commit:
             db.session.commit()
 
 
-handle_database(commit=False)
+handle_database(commit=True)
 
 # HOW I CONVERTED SQLITE3 TO MYSQL:
 # 1. Created local mysql database with commandline:
