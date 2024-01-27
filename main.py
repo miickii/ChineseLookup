@@ -104,7 +104,7 @@ def update_custom(word, chinese, chinese_traditional, pinyin, english, pos, freq
     word.sentence = sentence
 
 # returns word from database if it exists
-@app.route("/get-custom", methods=['GET'])
+@app.route("/get-custom", methods=['POST'])
 @cross_origin()
 def get_custom():
     word = None
