@@ -103,6 +103,18 @@ def update_custom(word, chinese, chinese_traditional, pinyin, english, pos, freq
     word.level = level
     word.sentence = sentence
 
+# returns word from database if it exists
+@app.route("/get-custom", methods=['GET'])
+@cross_origin()
+def get_custom():
+    word = None
+    chinese = request.json['word']
+    custom = Custom.query.filter_by(chinese=chinese).first()
+    if custom:
+        word = searcher.profile_word_json(custom)
+
+    return jsonify(word=word)
+
 @app.route("/add-custom", methods=['POST'])
 @cross_origin()
 def add_custom():
