@@ -6,7 +6,7 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 class Config(object):
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'you-will-never-guess'
     #SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:NxWYoZaY78cydE9yW6Gt@containers-us-west-70.railway.app:6688/railway'
-    SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:d1BDFbca333fHba3F4H5dd-e5AG26dDh@roundhouse.proxy.rlwy.net:12755/railway'
+    SQLALCHEMY_DATABASE_URI = 'mysql://root:NxWYoZaY78cydE9yW6Gt@containers-us-west-70.railway.app:6688/railway'
     #SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'sqlite:///' + os.path.join(basedir, 'app.db')
 
 class ConfigDBTest(object):
